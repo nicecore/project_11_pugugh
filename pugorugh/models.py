@@ -2,11 +2,12 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+# All-purpose 'unknown' variable
+UNKNOWN = 'u'
 
 # Choices for sex of dog
 MALE = 'm'
 FEMALE = 'f'
-UNKNOWN = 'u'
 GENDER_CHOICES = (
     (MALE, 'Male'),
     (FEMALE, 'Female'),
@@ -49,9 +50,8 @@ AGE_CHOICES = (
 
 
 class Dog(models.Model):
-
     name = models.CharField(max_length=30)
-    image_filename = models.CharField(max_length=300)
+    image_filename = models.CharField(max_length=200)
     breed = models.CharField(max_length=100)
     age = models.IntegerField()
     gender = models.CharField(
@@ -65,8 +65,11 @@ class Dog(models.Model):
         default=UNKNOWN
     )
 
+    def __str__(self):
+        return self.name
 
-class UserDog(mdoels.Model):
+
+class UserDog(models.Model):
     user = models.ForeignKey(User)
     dog = models.ForeignKey(Dog)
     status = models.CharField(
@@ -90,4 +93,3 @@ class UserPref(models.Model):
     def __str__(self):
         return "User Preference " + str(self.pk)
 
-    
