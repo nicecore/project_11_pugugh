@@ -81,15 +81,14 @@ class UserDog(models.Model):
 class UserPref(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     age = models.CharField(
-        max_length=10,
-        choices=AGE_CHOICES
+        max_length=7,
+        default="b,y,a,s"
     )
     gender = models.CharField(
-        max_length=1,
-        choices=GENDER_CHOICES,
-        default='u'
+        max_length=3,
+        default="f,m"
     )
-    size = models.CharField(max_length=2, choices=SIZE_CHOICES)
+    size = models.CharField(max_length=8, default="s,m,l,xl")
 
     def __str__(self):
         return "%s's User Preferences" % self.user.username.title()

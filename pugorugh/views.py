@@ -36,6 +36,8 @@ class RetrieveUpdateUserPref(generics.RetrieveUpdateAPIView):
         user_pref = self.get_object()
         pref_serializer = serializers.UserPrefSerializer(user_pref, request.data)
         if pref_serializer.is_valid():
+            print(request.data)
             pref_serializer.save()
             return Response(pref_serializer.data)
+        print(pref_serializer.errors)
         return Response(pref_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

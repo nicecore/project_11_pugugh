@@ -38,14 +38,10 @@ class UserPrefSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = (
-            'user',
             'age',
             'gender',
             'size'
         )
         model = models.UserPref
-
-
-
-
+        # extra_kwargs = {'user': {'write_only': True}}
 
