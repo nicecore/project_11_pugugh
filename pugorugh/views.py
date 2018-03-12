@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-
-from rest_framework import permissions
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -21,3 +21,21 @@ class ListDog(APIView):
         dogs = models.Dog.objects.all()
         serializer = serializers.DogSerializer(dogs, many=True)
         return Response(serializer.data)
+
+
+class RetrieveUpdateUserPref(generics.RetrieveUpdateAPIView):
+    queryset = models.UserPref.objects.all()
+    serializer_class = serializers.UserPrefSerializer
+
+    def get_object(self):
+        return get_object_or_404(
+            self.get_queryset(),
+            user=self.request.user)
+
+    def put(self, request, *args, **kwargs):
+        user_pref = self.get_object()
+        pref_serializer = serializers.UserPrefSerializer(user_pref, request.data)
+        if pref_serializer.is_valid():
+            pref_serializer.save()
+            return Response(pref_serializer.data)
+        return Response(pref_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

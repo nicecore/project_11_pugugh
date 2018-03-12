@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
 
 
 # All-purpose 'unknown' variable
@@ -91,5 +92,26 @@ class UserPref(models.Model):
     size = models.CharField(max_length=2, choices=SIZE_CHOICES)
 
     def __str__(self):
-        return "User Preference " + str(self.pk)
+        return "%s's User Preferences" % self.user.username.title()
+
+
+def create_user_pref(sender, instance, created, **kwargs):
+
+    if created:
+        UserPref(user=instance).save()
+
+
+post_save.connect(create_user_pref, sender=User)
+
+
+
+
+
+
+
+
+
+
+
+
 
