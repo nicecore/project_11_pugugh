@@ -34,7 +34,8 @@ LIKED = 'l'
 DISLIKED = 'd'
 STATUS_CHOICES = (
     (LIKED, 'Like'),
-    (DISLIKED, 'Dislike')
+    (DISLIKED, 'Dislike'),
+    (UNKNOWN, 'Undecided')
 )
 
 # Age choices
@@ -75,8 +76,12 @@ class UserDog(models.Model):
     dog = models.ForeignKey(Dog)
     status = models.CharField(
         max_length=1,
-        choices=STATUS_CHOICES
+        choices=STATUS_CHOICES,
+        default="u"
     )
+
+    def __str__(self):
+        return "{0}'s status regarding {1}".format(self.user.username, self.dog.name)
 
 class UserPref(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -94,11 +99,13 @@ class UserPref(models.Model):
         return "%s's User Preferences" % self.user.username.title()
 
 
+
 def create_user_pref(sender, instance, created, **kwargs):
 
     if created:
         UserPref(user=instance).save()
-
+        for dog in Dog.objects.all():
+            UserDog.objects.create(user=instance, dog=dog)
 
 post_save.connect(create_user_pref, sender=User)
 
