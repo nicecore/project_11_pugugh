@@ -47,9 +47,8 @@ class RetrieveUpdateUserPref(generics.RetrieveUpdateAPIView):
 
 
 
-class GetADog(generics.RetrieveAPIView):
+class GetUndecidedDog(generics.RetrieveAPIView):
 
-    queryset = Dog.objects.all()
     serializer_class = serializers.DogSerializer
 
     def get_queryset(self):
@@ -57,71 +56,25 @@ class GetADog(generics.RetrieveAPIView):
         queryset = Dog.objects.filter(
             gender__in=user_pref.gender,
             size__in=user_pref.size
-        ).exclude(
-            Q(user_dog__status='l') | Q(user_dog__status='d')
-        ).order_by('pk')
+            ).order_by('pk')
         return queryset
 
+
     def get_object(self):
-        # Get a dog object -- but where does the pk in kwargs come from???
-        dog_id = self.kwargs.get('pk')
-        if not self.get_queryset():
-            raise Http404
-        dog = self.get_queryset().filter(id__gt=dog_id).first()
+        pk_from_url = self.kwargs.get('pk')
+        queryset = self.get_queryset()
+        dog = queryset.filter(id__gt=pk_from_url).first()
         if dog is not None:
             return dog
         else:
-            return self.get_queryset().first()
+            return queryset.first()
 
     def get(self, request, pk, format=None):
+        print(self.get_queryset())
+        print(pk)
         dog = self.get_object()
         serializer = serializers.DogSerializer(dog)
         return Response(serializer.data)
-
-
-
-
-
-
-
-
-
-# class GetNextUndecidedDog(APIView):
-
-#     def get_queryset(self):
-#         """Return a queryset of only the dogs
-#         that match the user's preferences.
-#         """
-
-#         # Get the user from the request
-#         user = self.request.user
-
-#         # Get the user's preferences
-#         prefs = get_object_or_404(UserPref, user=user)
-
-#         # Define the queryset filtered by user preferences (except age range - still need to do)
-#         # and by UserDog status and UserDog User
-#         dogs = Dog.objects.filter(
-#             gender__in=user_prefs.gender,
-#             size__in=user_prefs.size,
-#             userdog__status='u',
-#             userdog__user=user
-#         )
-#         return dogs
-
-#     def get_object(self):
-#         # Get the dogs queryset from get_queryset() above
-
-#         dogs = self.get_queryset()
-
-#         # Return the first object in the queryset
-#         dog = dogs.first()
-#         return dog
-
-#     def get(self, request, pk, format=None):
-#         next_dog = self.get_object()
-#         serializer = serializers.DogSerializer(next_dog)
-#         return Response(serializer.data)
 
 
 

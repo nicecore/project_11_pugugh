@@ -9,8 +9,9 @@ from . import views
 
 # API endpoints
 urlpatterns = format_suffix_patterns([
-    url(r'^api/dog/(?P<pk>\d+)/undecided/next', views.GetADog.as_view(), name='get-dog'),
-    # url(r'^api/dog/(?P<pk>\d+)/undecided/next', views.GetNextUndecidedDog.as_view(), name='next-dog'),
+    url(r'^api/dog/(?P<pk>-?\d+)/undecided/next',
+        views.GetUndecidedDog.as_view(),
+        name='get-undecided-dog'),
     url(r'^api/user/login/$', obtain_auth_token, name='login-user'),
     url(r'^api/user/$', views.UserRegisterView.as_view(), name='register-user'),
     url(r'^api/user/preferences/$',
