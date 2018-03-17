@@ -62,7 +62,7 @@ class Dog(models.Model):
         default=UNKNOWN
     )
     size = models.CharField(
-        max_length=2,
+        max_length=10,
         choices=SIZE_CHOICES,
         default=UNKNOWN
     )
@@ -81,7 +81,12 @@ class UserDog(models.Model):
     )
 
     def __str__(self):
-        return "{0}'s status regarding {1}".format(self.user.username, self.dog.name)
+        return "{0} {1} regarding {2}".format(
+            self.user.username,
+            self.status,
+            self.dog.name,
+
+        )
 
 class UserPref(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -93,7 +98,7 @@ class UserPref(models.Model):
         max_length=3,
         default="f,m"
     )
-    size = models.CharField(max_length=8, default="s,m,l,xl")
+    size = models.CharField(max_length=10, default="s,m,l,xl")
 
     def __str__(self):
         return "%s's User Preferences" % self.user.username.title()

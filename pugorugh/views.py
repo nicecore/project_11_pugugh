@@ -48,17 +48,19 @@ class RetrieveUpdateUserPref(generics.RetrieveUpdateAPIView):
 
 
 class GetUndecidedDog(generics.RetrieveAPIView):
-
     serializer_class = serializers.DogSerializer
 
     def get_queryset(self):
-        user_pref = UserPref.objects.get(user=self.request.user)
+        user = self.request.user
+        user_pref = UserPref.objects.get(user=user)
         queryset = Dog.objects.filter(
             gender__in=user_pref.gender,
-            size__in=user_pref.size
+            size__in=user_pref.size.split(',')
+            ).filter(
+                userdog__status='u',
+                userdog__user_id=user.id
             ).order_by('pk')
         return queryset
-
 
     def get_object(self):
         pk_from_url = self.kwargs.get('pk')
@@ -78,10 +80,21 @@ class GetUndecidedDog(generics.RetrieveAPIView):
 
 
 
+class GetLikedDog(generics.RetrieveAPIView):
+    serializer_class = serializers.DogSerializer
 
+    def get_queryset(self):
+        user_pref = UserPref.objects.get(user=self.request.user)
+        queryset = Dog.objects.filter(
+            gender__in=user_pref.gender,
+            size__in=user_pref.size.split(',')
+            ).order_by('pk')
+        return queryset
 
-
-
+    def get_object(self):
+        pk_from_url = self.kwargs.get('pk')
+        queryset = self.get_queryset()
+        dog = queryset.filter(id__gt=pk_from_url).first()
 
 
 
