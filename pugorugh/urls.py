@@ -12,6 +12,15 @@ urlpatterns = format_suffix_patterns([
     url(r'^api/dog/(?P<pk>-?\d+)/undecided/next',
         views.GetUndecidedDog.as_view(),
         name='get-undecided-dog'),
+    url(r'^api/dog/(?P<pk>-?\d+)/liked/next',
+        views.GetLikedDog.as_view(),
+        name='get-liked-dog'),
+    url(r'^api/dog/(?P<pk>-?\d+)/disliked/next',
+        views.GetDislikedDog.as_view(),
+        name='get-liked-dog'),
+    url(r'^api/dog/(?P<pk>-?\d+)/liked/', views.LikeDog.as_view(), name='like-dog'),
+    url(r'^api/dog/(?P<pk>-?\d+)/disliked/', views.DislikeDog.as_view(), name='dislike-dog'),
+    url(r'^api/dog/(?P<pk>-?\d+)/undecided/', views.UndecideDog.as_view(), name='undecide-dog'),
     url(r'^api/dog/(?P<pk>-?\d+)/liked/next', views.GetLikedDog.as_view(),
         name='get-liked-dog'),
     url(r'^api/user/login/$', obtain_auth_token, name='login-user'),
@@ -27,3 +36,4 @@ urlpatterns = format_suffix_patterns([
     url(r'^$', TemplateView.as_view(template_name='index.html')),
 
 ])
+

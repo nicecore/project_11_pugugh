@@ -66,9 +66,27 @@ class Dog(models.Model):
         choices=SIZE_CHOICES,
         default=UNKNOWN
     )
+    age_group = models.CharField(max_length=1, default='b')
+
+    @property
+    def get_age_group(self):
+        """Return an age group for a given Dog"""
+        if self.age < 10:
+            return 'b'
+        elif self.age < 30:
+            return 'y'
+        elif self.age < 60:
+            return 'a'
+        else:
+            return 's'
+
+    def save(self, *args, **kwargs):
+        self.age_group = self.get_age_group
+        super(Dog, self).save(*args, **kwargs)
+
 
     def __str__(self):
-        return self.name
+        return "{0}, {1}".format(self.name, self.id)
 
 
 class UserDog(models.Model):

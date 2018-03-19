@@ -33,7 +33,6 @@ class DogSerializer(serializers.ModelSerializer):
         model = models.Dog
 
 
-
 class UserPrefSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -44,7 +43,6 @@ class UserPrefSerializer(serializers.ModelSerializer):
         )
         model = models.UserPref
         # extra_kwargs = {'user': {'write_only': True}}
-
 
 
 class UserDogSerializer(serializers.ModelSerializer):
