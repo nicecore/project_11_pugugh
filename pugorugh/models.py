@@ -84,7 +84,6 @@ class Dog(models.Model):
         self.age_group = self.get_age_group
         super(Dog, self).save(*args, **kwargs)
 
-
     def __str__(self):
         return "{0}, {1}".format(self.name, self.id)
 
@@ -106,6 +105,7 @@ class UserDog(models.Model):
 
         )
 
+
 class UserPref(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     age = models.CharField(
@@ -122,7 +122,6 @@ class UserPref(models.Model):
         return "%s's User Preferences" % self.user.username.title()
 
 
-
 def create_user_pref(sender, instance, created, **kwargs):
 
     if created:
@@ -130,17 +129,5 @@ def create_user_pref(sender, instance, created, **kwargs):
         for dog in Dog.objects.all():
             UserDog.objects.create(user=instance, dog=dog)
 
+
 post_save.connect(create_user_pref, sender=User)
-
-
-
-
-
-
-
-
-
-
-
-
-
